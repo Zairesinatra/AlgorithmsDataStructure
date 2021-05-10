@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dll</title>
+</head>
+<body>
+    dll
+    <script>
+
+class Node {
+            constructor(element) {
+                this.element = element;
+                this.next = null;
+            }
+        }
+        function defaultEquals(a,b){
+            return a === b;
+        }
+
+        class LinkedList { // 对于封装的东西,我们首先考虑有什么共有的属性和方法
+            conductor(equalsFn = defaultEquals){
+                // 1.head指向所有节点的第一个节点 2.node(element、next)
+                this.count = 0; // 存储链表元素的数量
+                this.head = null;
+                this.equalsFn = equalsFn;
+            }
+            append(element){
+                const node = new Node(element); // element作为值传入创建node项
+                let current; // 设一个
+                if (this.head == null) { this.head = node }
+                else { 
+                    current = this.head;
+                    while(current.next != null){
+                        current = current.next;
+                    }
+                    current.next = node;
+                }
+                this.count++
+            }
+            removeAt(index){ // 这里要验证index是否为有效的index
+                let current = this.head // 通过current创建对列表第一个元素的引用
+                if(index>=0 && index<this.count){
+                    if(index == 0){this.head = current.next}
+                    else{
+                        let previous;
+                        for(i=0;i<index;i++){ // 迭代链表的node
+                            let previous = current;
+                            current = current.next;
+                        }
+                        previous.next = current.next; // 跳过选择到的current这一项
+                    }
+                    this.count--; // 少了一个node
+                    return current.element; // 返回删除的这个节点元素
+                }
+                return undefined;
+            }
+            getElementAt(index){
+                if(index>=0 && index<=this.count){
+                    let node = this.head;
+                    for(i=0; i<index && node!=null; i++){
+                        node = node.next;
+                    }
+                    return node;
+                }
+                return undefined;
+            }
+            insert(element,index){
+                if(index>=0&&index<=this.count){ // 检查越界值
+                    let node = new Node(element);
+                    if(index === 0){ // 链表起点添加元素
+                        const current = this.head; // current是第一个元素的引用
+                        node.next = current; // 插入在current元素之前
+                        this.head = node; //head引用改为node
+                    }
+                    else{
+                        const previous = this.getElementAt(index-1); // 迭代找到目标元素
+                        const current = previous.next;
+                        node.next = current; // 改变previous和current之间的链接
+                        previous.next = node;
+                    }
+                    this.count++;
+                    return true;
+                }
+                return false; // 错误的index
+            }
+            indexOf(element){
+                let current = this.head; // 拿到指向的第一节点
+                for(let i=0; i<this.count&&current!=null; i++){
+                    if(this.equalsFn(element,current.element)){
+                        return i;
+                    }
+                    current = current.next; // 这里current一直在变为下一项
+                }
+                return -1;
+            }
+            remove(element){ // 复用代码
+                const index = this.indexOf(element)
+                return this.removeAt(index)
+            }
+            size(){
+                return this.count;
+            }
+            isEmpty(){
+                return this.size() === 0;
+            }
+            getHead(){
+                return this.head;
+            }
+            toString(){
+                if(this.head == null){ // 链表为空则返回空字符串
+                    return ''
+                }
+                else{
+                    let objString = `${this.head.element}`; // 链表第一项初始化最后返回的字符串
+                    let current = this.head.next;
+                    for(let i=0; i<this.size() && current != null; i++){
+                        objString = `${objString},${current.element}`;
+                        current = current.next;
+                    }
+                    return objString;
+                }
+            }
+        }
+// DoublyLinkedList继承Linklist所有属性与方法
+class DoublyLinkedList extends LinkedList {
+    constructor(equalsFn = defaultequals) {
+        super(equalsFn);
+        // 链表最后一个元素的引用
+        this.tail = undefined
+    }
+    insert(element, index){
+        if (index >= 0 && index <= this.count){
+            const node = new DoublyNode(element);
+            let current = this.head;
+            if (index === 0) {
+                if(this.head == null) { // 双向链表为空
+                    this.head = node;
+                    this.tail = node;
+                }else {
+                    node.next = this.head; // current为双向链表第一个元素的引用 那么就是 node.next = current
+                    current.prev = node; // 为被插入元素设置指针
+                    this.head = node; // 使得成为第一个元素
+                }
+        } else if (index === this.count) {
+            current = this.tail;
+            current.next = node;
+            node.prev = current;
+            this.tail = node;
+        } else {
+            const previous = this.getElementAt(index - 1);
+            current = previous.next;
+            node.next = current;
+            previous.next = node;
+            current.prev = node;
+            node.prev = previous
+        }
+            this.count++;
+            return ture;
+        }
+        return false;
+    }
+}
+var dll = new LinkedList()
+dll.insert('x','0')
+dll.insert('z','1')
+dll.insert('y','2')
+console.log(dll);
+console.log(dll.count)
+    </script>
+</body>
+</html>

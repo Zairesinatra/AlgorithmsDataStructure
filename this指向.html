@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>this</title>
+</head>
+<body>
+    <script>
+        // 1.默认指向规则
+        // console.log(this===window);//ture
+        // console.log({}==={});//false-对象指针地址不同
+
+        // 函数的独立调用:
+        // function test(){
+        //     console.log(this === window)//true
+        // }
+        // test();
+
+        // 2.隐式绑定规则-对象调用(对象的方法)-谁调用指向谁
+        var a = 0;
+        var obj = {
+            a:2,
+            foo:function(){
+                console.log(this===obj);//指向obj
+                function test(){
+                    // 每一个函数执行时才都会有一个自身的this指向,this指向可能相同,但this不同
+                    // 函数执行才有this意义
+                    console.log(this);//指向window
+                }
+                test();//独立调用的内部指向则this指window
+
+                // 浏览器所有立即执行函数指向window
+                // 分执行环境.node与模块化指相应的全局对象
+            //     (function(){
+            //     // 函数申明完成立即执行
+            //     console.log(this);//指向window
+            // })();
+
+
+            
+            //闭包:当函数执行时导致函数被定义并抛出;是一种现象
+            function bibao(){
+                console.log(this)
+            } 
+            return bibao//依旧是独立调用
+            }
+        }
+        obj.foo()
+    </script>
+</body>
+</html>
