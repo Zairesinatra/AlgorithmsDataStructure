@@ -3,19 +3,7 @@ function swap (array, a, b) {
 }
 
 // 选择排序是原址比较排序算法-数据结构中最小值放置第一位、第二小值放在第二位,以此类推
-const Compare = {
-    LESS_THAN: -1,
-    BIGGER_THAN: 1,
-    EQUALS: 0
-};
-function defaultCompare(a, b) {
-    if(a === b) {
-        return Compare.EQUALS;
-    }
-    return a < b ? Compare.LESS_THAN : Compare.BIGGER_THAN;
-}
-
-function selectionSort(array, compareFn = defaultCompare) {
+function selectionSort(array) {
     const { length } = array;
     // 声明当前索引最小值
     let indexMin;
@@ -24,7 +12,7 @@ function selectionSort(array, compareFn = defaultCompare) {
         indexMin = i;
         // 从当前i值至数组结束比较是否有位置j比当前值小
         for (let j = i+1; j < length; j++) {
-            if (compareFn(array[indexMin], array[j]) === Compare.BIGGER_THAN) {
+            if (array[indexMin]>array[j]) {
                 indexMin = j;
             }
         }
